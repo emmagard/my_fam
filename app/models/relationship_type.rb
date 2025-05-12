@@ -1,6 +1,12 @@
 class RelationshipType < ApplicationRecord
+  PARENT = 'parent'.freeze
+  CHILD  = 'child'.freeze
+  SIBLING = 'sibling'.freeze
+
+  
   MOTHER = 'Mother'.freeze
   FATHER = 'Father'.freeze
+
   SISTER = 'Sister'.freeze
   BROTHER = 'Brother'.freeze
   COUSIN = 'Cousin'.freeze
@@ -9,16 +15,15 @@ class RelationshipType < ApplicationRecord
   AUNT = 'Aunt'.freeze
   UNCLE = 'Uncle'.freeze
 
-  PARENT_VALUES = [ MOTHER, FATHER ].freeze
-  CHILDREN_VALUES = [ SON, DAUGHTER ].freeze
-  SIBLING_VALUES = [ SISTER, BROTHER ].freeze
-
   # scope :parent_types, -> { where(value: PARENT_VALUES) }
   # scope :children_types, -> { where(value: CHILDREN_VALUES) }
   # scope :sibling_types, -> { where(value: SIBLING_VALUES) }
   # scope :cousin_type, -> { where(value: COUSIN) }
   # scope :aunt_type, -> { where(value: AUNT) }
   # scope :uncle_type, -> { where(value: UNCLE) }
+
+  belongs_to :inverse_type, class_name: "RelationshipType", optional: true
+  has_many :inverse_of, class_name: "RelationshipType", foreign_key: "inverse_type_id"
 
   has_many :relationships
 

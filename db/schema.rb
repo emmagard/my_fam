@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_01_143451) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_12_163825) do
   create_table "individuals", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
@@ -21,6 +21,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_01_143451) do
     t.string "value"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "inverse_type_id"
+    t.index ["inverse_type_id"], name: "index_relationship_types_on_inverse_type_id"
   end
 
   create_table "relationships", force: :cascade do |t|
@@ -34,6 +36,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_01_143451) do
     t.index ["relative_id"], name: "index_relationships_on_relative_id"
   end
 
+  add_foreign_key "relationship_types", "relationship_types", column: "inverse_type_id"
   add_foreign_key "relationships", "individuals"
   add_foreign_key "relationships", "individuals", column: "relative_id"
   add_foreign_key "relationships", "relationship_types"
