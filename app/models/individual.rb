@@ -1,19 +1,28 @@
 class Individual < ApplicationRecord
+  # Relationships inititated by this individual
   has_many :relationships
   has_many :relatives, through: :relationships, source: :relative
 
+  # Relationships where this individual is the target
   has_many :inverse_relationships, class_name: "Relationship", foreign_key: "relative_id"
   has_many :inverse_relatives, through: :inverse_relationships, source: :individual
 
-  # def parents_ids
-  #   self.relationships.parents.pluck(:relative_id)
-  # end
+  def parents
+    Individual.joins({ inverse_relationships: :relationship_type })
+      .where(relationships: { individual_id: id })
+      .where(relationship_types: { value: "parent" })
+  end
 
-  # def siblings_ids
-  #   self.relationships.siblings.pluck(:relative_id)
-  # end
+  def children
+    Individual.joins({ inverse_relationships: :relationship_type })
+      .where(relationships: { individual_id: id })
+      .where(relationship_types: { value: "child" })
+  end
 
-  # def children_ids
-  #   self.relationships.children.pluck(:relative_id)
-  # end
+  def siblings
+    Individual.joins({ inverse_relationships: :relationship_type })
+      .where(relationships: { individual_id: id })
+      .where(relationship_types: { value: "sibling" })
+  end
+
 end
