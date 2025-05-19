@@ -1,7 +1,11 @@
 Rails.application.routes.draw do
   resources :relationship_types
   resources :relationships
-  resources :individuals
+  resources :individuals do
+    member do
+      get "family_tree"
+    end
+  end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.

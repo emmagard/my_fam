@@ -10,7 +10,7 @@ class IndividualsController < ApplicationController
 
   # GET /individuals/1
   def show
-    render json: @individual
+    render json: @individual, serializer: RecursiveIndividualSerializer, depth: 0
   end
 
   # POST /individuals
@@ -36,6 +36,15 @@ class IndividualsController < ApplicationController
   # DELETE /individuals/1
   def destroy
     @individual.destroy!
+  end
+
+  def family_tree
+    @individual = Individual.find(params[:id])
+    depth = params[:depth].present? ? params[:depth].to_i : 3
+    
+    # Use direct serializer instantiation to avoid model_name errors
+    serializer = FamilyTreeSerializer.new(@individual, depth: depth)
+    render json: serializer
   end
 
   private
