@@ -29,8 +29,8 @@ Dev
 
 
 # Create individuals
-john = Individual.create(first_name: "John")
-jane = Individual.create(first_name: "Jane")
+john = Individual.create(name: "John")
+jane = Individual.create(name: "Jane")
 
 # Create relationship type
 parent_type = RelationshipType.create(name: "parent")

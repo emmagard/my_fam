@@ -10,7 +10,7 @@ class IndividualsController < ApplicationController
 
   # GET /individuals/1
   def show
-    render json: @individual, serializer: RecursiveIndividualSerializer, depth: 0
+    render json: @individual, serializer: IndividualSerializer, depth: 0
   end
 
   # POST /individuals
