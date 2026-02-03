@@ -44,7 +44,8 @@ class IndividualSerializer < ActiveModel::Serializer
       result = {
         parents: serialize_related_individuals(object.parents),
         children: serialize_related_individuals(object.children),
-        siblings: serialize_related_individuals(object.siblings)
+        siblings: serialize_related_individuals(object.siblings),
+        spouses: serialize_related_individuals(object.spouses)
       }
 
       # Restore depth

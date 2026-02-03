@@ -25,4 +25,10 @@ class Individual < ApplicationRecord
       .where(relationship_types: { value: "sibling" })
   end
 
+  def spouses
+    Individual.joins({ inverse_relationships: :relationship_type })
+      .where(relationships: { individual_id: id })
+      .where(relationship_types: { value: "spouse" })
+  end
+
 end

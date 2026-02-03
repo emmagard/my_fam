@@ -15,12 +15,19 @@ class IndividualsController < ApplicationController
 
   # POST /individuals
   def create
-    @individual = Individual.new(individual_params)
+    # Create a relationship if an individual id is provided
+    if params[:id].present?
+      @individual = Individual.find(params[:id])
+      @new_individual = Individual.new(name: params[:relative_name])
+      @relationship = Relationship.new(individual_id: @individual.id, relative: @new_individual, relationship_type_id: params[:relationship_type_id])
+    end
 
-    if @individual.save
-      render json: @individual, status: :created, location: @individual
+    @new_individual = Individual.new(individual_params)
+
+    if @new_individual.save && (@relationship.nil? || @relationship.save)
+      render json: @new_individual, status: :created, location: @new_individual
     else
-      render json: @individual.errors, status: :unprocessable_entity
+      render json: @new_individual.errors, status: :unprocessable_entity
     end
   end
 
