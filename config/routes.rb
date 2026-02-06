@@ -1,6 +1,10 @@
 Rails.application.routes.draw do
   resources :relationship_types
-  resources :relationships
+  resources :relationships do
+    collection do
+      post "create_with_new_person"
+    end
+  end
   resources :individuals do
     member do
       get "family_tree"

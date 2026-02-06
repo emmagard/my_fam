@@ -1,9 +1,4 @@
 class RelationshipSerializer < ActiveModel::Serializer
-  attributes :id,
-             :relative
-
-
-  def relative
-    ActiveModelSerializers::SerializableResource.new(object.relative_id, serializer: IndividualSerializer)
-  end
+  attributes :id
+  belongs_to :relative, serializer: IndividualSerializer
 end

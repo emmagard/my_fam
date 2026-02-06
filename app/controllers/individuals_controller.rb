@@ -15,25 +15,18 @@ class IndividualsController < ApplicationController
 
   # POST /individuals
   def create
-    # Create a relationship if an individual id is provided
-    if params[:id].present?
-      @individual = Individual.find(params[:id])
-      @new_individual = Individual.new(name: params[:relative_name])
-      @relationship = Relationship.new(individual_id: @individual.id, relative: @new_individual, relationship_type_id: params[:relationship_type_id])
-    end
+    @individual = Individual.new(model_params)
 
-    @new_individual = Individual.new(individual_params)
-
-    if @new_individual.save && (@relationship.nil? || @relationship.save)
-      render json: @new_individual, status: :created, location: @new_individual
+    if @individual.save
+      render json: @individual, status: :created, location: @individual
     else
-      render json: @new_individual.errors, status: :unprocessable_entity
+      render json: @individual.errors, status: :unprocessable_entity
     end
   end
 
   # PATCH/PUT /individuals/1
   def update
-    if @individual.update(individual_params)
+    if @individual.update(model_params)
       render json: @individual
     else
       render json: @individual.errors, status: :unprocessable_entity
@@ -61,7 +54,7 @@ class IndividualsController < ApplicationController
     end
 
     # Only allow a list of trusted parameters through.
-    def individual_params
-      params.expect(individual: [ :name ])
+    def model_params
+      params.require(:individual).permit(:name)
     end
 end
