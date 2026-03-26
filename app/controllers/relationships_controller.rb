@@ -38,24 +38,29 @@ class RelationshipsController < ApplicationController
     @relationship.destroy!
   end
 
+  # POST /relationships/1/create_with_new_person
   def create_with_new_person
    @individual = Individual.find_by(id: params[:id])
-  
+    # Ensure the individual exists before trying to create a relationship for them
     unless @individual
       render json: { error: "Individual not found" }, status: :not_found
       return
     end
 
+    #  A transaction will ensure that both of these operations succeed or fail together.
+    #  i.e. don't create an Individual if the Relationship can't be created and vice versa
     ActiveRecord::Base.transaction do
+      # Operation 1: Create individual
       @new_individual = Individual.create!(name: params[:name])
-      @new_relationship = Relationship.create!(
+      
+      # Operation 2: Create relationship
+      @relationship = Relationship.create!(
         individual_id: params[:id],
         relative: @new_individual,
         relationship_type_id: params[:relationship_type_id]
       )
-      
-      # Correct way to use ActiveModel::Serializer
-      render json: @new_relationship, status: :created
+
+      render json: @relationship, status: :created
     end
     rescue ActiveRecord::RecordInvalid => e
       render json: { errors: e.record.errors.full_messages }, status: :unprocessable_entity

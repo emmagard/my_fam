@@ -38,8 +38,11 @@ class IndividualsController < ApplicationController
     @individual.destroy!
   end
 
+  # GET /individuals/1/family_tree
   def family_tree
+
     @individual = Individual.find(params[:id])
+    # Set the depth for the family tree
     depth = params[:depth].present? ? params[:depth].to_i : 3
     
     # Use direct serializer instantiation to avoid model_name errors
